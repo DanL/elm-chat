@@ -1,0 +1,17 @@
+{
+  "name": "chat",
+  "version": "0.0.1",
+  "description": "TBD",
+  "main": "elm.js",
+  "scripts": {
+    "watch": "chokidar '**/*.elm' -c 'elm-make Chat/Main.elm --debug --output elm.js'"
+  },
+  "author": "DanL",
+  "license": "ISC",
+  "dependencies": {
+    "npm": "^5.7.1"
+  },
+  "devDependencies": {
+    "chokidar-cli": "^1.2.0"
+  }
+}

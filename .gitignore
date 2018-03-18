@@ -1,0 +1,10 @@
+# Mac Lyfe
+.DS_Store
+
+# Elm
+elm-stuff
+elm.js
+
+# Node / NPM
+node_modules
+

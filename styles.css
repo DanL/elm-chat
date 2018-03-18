@@ -1,0 +1,89 @@
+html, body, #app { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: Monaco;
+  font-size: 9pt;
+}
+
+#app {
+  display: grid;
+  grid-template-columns: 20% 1fr;
+}
+
+#switcher {
+  overflow: scroll;
+  background-color: purple;
+}
+
+#channels {
+  padding: 0;
+  margin: 10px 0 0 10px;
+}
+
+#channels li {
+  color: #eee;
+  list-style-type: none;
+  padding: 2px 7px;
+  margin-bottom: 2px;
+}
+
+#channels li:hover {
+  background-color: #b9b;
+  color: #222;
+  cursor: pointer;
+}
+
+#channels li:hover, .channel-active {
+  border-radius: 5px 0 0 5px;
+}
+
+#channels .channel-active {
+  background-color: #dcd;
+  color: #222;
+}
+
+#channels .channel-active:hover {
+  background-color: #dcd;
+  color: #222;
+}
+
+#chat {
+  overflow: scroll;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+#chat-header {
+  font-size: 11pt;
+  padding: 5px 10px;
+  border-bottom: 1px solid #aaa;
+}
+
+#chat-messages {
+  margin: 0;
+  padding: 0;
+}
+
+#chat-messages li {
+  margin: 10px;
+}
+
+.chat-message-name {
+  font-weight: bold;
+  margin-bottom: 1px;
+  color: purple;
+}
+
+#chat-input {
+  border-top: 1px solid #aaa;
+  box-sizing: border-box;
+  padding: 7px;
+}
+
+#chat-input input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px;
+  font: inherit;
+}
