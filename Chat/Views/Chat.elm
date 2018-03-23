@@ -1,5 +1,6 @@
 module Views.Chat exposing (chat)
 
+import Helpers exposing (onEnter)
 import Html exposing (Attribute, Html, div, input, li, text, ul)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
@@ -20,45 +21,47 @@ header : Model -> Html msg
 header model =
     div
         [ id "chat-header" ]
-        [ text "#engineering" ]
+        [ text ("#" ++ model.activeChannel) ]
 
 
 messages : Model -> Html msg
 messages model =
     ul
         [ id "chat-messages" ]
-        [ li []
-            [ div
-                [ class "chat-messages-name" ]
-                [ text "dan" ]
-            , div
-                [ class "chat-message-message" ]
-                [ text "This is a test message." ]
-            ]
-        , li []
-            [ div
-                [ class "chat-messages-name" ]
-                [ text "jake" ]
-            , div
-                [ class "chat-message-message" ]
-                [ text "Messages are cool." ]
-            ]
-        , li []
-            [ div
-                [ class "chat-messages-name" ]
-                [ text "jake" ]
-            , div
-                [ class "chat-message-message" ]
-                [ text "Something something whatever." ]
-            ]
+        (List.map message model.messages)
+
+
+message : ChatMessage -> Html msg
+message chatMessage =
+    li []
+        [ div
+            [ class "chat-messages-name" ]
+            [ text chatMessage.member.name ]
+        , div
+            [ class "chat-message-message" ]
+            [ text chatMessage.message ]
         ]
 
 
 inputMessage : Model -> Html Msg
 inputMessage model =
+    let
+        currentMessage =
+            case model.currentMessage of
+                Just cm ->
+                    cm.message
+
+                Nothing ->
+                    ""
+    in
     div
         [ id "chat-input" ]
         [ input
-            [ type_ "text", placeholder "Say something~", onInput SetMessage ]
+            [ type_ "text"
+            , placeholder "Say something~"
+            , value currentMessage
+            , onInput SetMessage
+            , onEnter SendMessage
+            ]
             []
         ]

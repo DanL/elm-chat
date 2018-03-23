@@ -1,13 +1,14 @@
 port module Chat exposing (..)
 
-import Html exposing (programWithFlags)
+import Dict exposing (Dict)
+import Html exposing (program)
 import Types exposing (ChatMessage, Member, Model, Msg(..))
 import Views exposing (view)
 
 
-main : Program (Maybe Model) Model Msg
+main : Program Never Model Msg
 main =
-    programWithFlags
+    program
         { init = init
         , view = view
         , update = update
@@ -15,17 +16,55 @@ main =
         }
 
 
-init : Maybe Model -> ( Model, Cmd Msg )
-init savedModel =
-    emptyModel ! []
+init : ( Model, Cmd Msg )
+init =
+    let
+        channels =
+            [ ( "boston"
+              , { name = "boston"
+                , members = []
+                }
+              )
+            , ( "general"
+              , { name = "general"
+                , members = []
+                }
+              )
+            , ( "engineering"
+              , { name = "engineering"
+                , members = []
+                }
+              )
+            ]
+                |> Dict.fromList
+
+        activeChannel =
+            "general"
+
+        messages =
+            [ { member = { name = "dan" }, message = "This is a test message." }
+            , { member = { name = "jake" }, message = "Messages are cool." }
+            , { member = { name = "fyodor" }, message = "Something something whatever." }
+            ]
+
+        currentMember =
+            { name = "Dan" }
+    in
+    { emptyModel
+        | channels = channels
+        , activeChannel = activeChannel
+        , messages = messages
+        , currentMember = currentMember
+    }
+        ! []
 
 
 emptyModel : Model
 emptyModel =
-    { channels = []
-    , activeChannel = { name = "", members = [] }
+    { channels = Dict.empty
+    , activeChannel = ""
     , messages = []
-    , currentMessage = { member = { name = "" }, message = "" }
+    , currentMessage = Nothing
     , currentMember = { name = "" }
     }
 
@@ -40,4 +79,16 @@ update msg model =
             { model | activeChannel = channel } ! []
 
         SetMessage message ->
-            { model | currentMessage = ChatMessage model.currentMember message } ! []
+            { model | currentMessage = Just (ChatMessage model.currentMember message) } ! []
+
+        SendMessage ->
+            let
+                newMessage =
+                    case model.currentMessage of
+                        Just chatMessage ->
+                            [ chatMessage ]
+
+                        Nothing ->
+                            []
+            in
+            { model | messages = model.messages ++ newMessage, currentMessage = Nothing } ! []
