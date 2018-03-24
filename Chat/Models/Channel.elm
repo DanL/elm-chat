@@ -1,9 +1,14 @@
-module Models.Channel exposing (findByName)
+module Models.Channel exposing (active, empty)
 
 import Dict
 import Types exposing (Channel, ChannelName, Model)
 
 
-findByName : Model -> ChannelName -> Maybe Channel
-findByName model name =
-    Dict.get name model.channels
+active : Model -> Maybe Channel
+active model =
+    Dict.get model.activeChannel model.channels
+
+
+empty : Channel
+empty =
+    Channel "" [] Nothing

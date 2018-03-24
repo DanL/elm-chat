@@ -4,6 +4,7 @@ import Helpers exposing (onEnter)
 import Html exposing (Attribute, Html, div, input, li, text, ul)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
+import Models.Message as Message
 import Types exposing (Channel, ChatMessage, Member, Model, Msg(..))
 
 
@@ -28,11 +29,11 @@ messages : Model -> Html msg
 messages model =
     ul
         [ id "chat-messages" ]
-        (List.map message model.messages)
+        (List.map htmlMessage (Message.active model))
 
 
-message : ChatMessage -> Html msg
-message chatMessage =
+htmlMessage : ChatMessage -> Html msg
+htmlMessage chatMessage =
     li []
         [ div
             [ class "chat-messages-name" ]
