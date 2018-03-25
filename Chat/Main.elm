@@ -1,10 +1,12 @@
 port module Chat exposing (..)
 
 import Dict exposing (Dict)
+import Dom.Scroll
 import Html exposing (program)
 import Models.Channel
 import Models.Member
 import Models.Message
+import Task
 import Types exposing (ChatMessage, Member, MemberId, Model, Msg(..))
 import Views exposing (view)
 
@@ -105,5 +107,8 @@ update msg model =
 
                         Nothing ->
                             model.channels
+
+                scrollMessages =
+                    Task.attempt (\_ -> NoOp) (Dom.Scroll.toBottom "chat-messages")
             in
-            { model | channels = newChannels, currentMessage = Nothing } ! []
+            { model | channels = newChannels, currentMessage = Nothing } ! [ scrollMessages ]
