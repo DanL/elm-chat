@@ -7,7 +7,7 @@ import Models.Channel
 import Models.Member
 import Models.Message
 import Task
-import Types exposing (ChatMessage, Member, MemberId, Model, Msg(..))
+import Types exposing (Channel, ChannelName, ChatMessage, Member, MemberId, Model, Msg(..))
 import Views exposing (view)
 
 
@@ -89,26 +89,30 @@ update msg model =
             { model | currentMessage = Just (Models.Message.create model.currentMemberId message) } ! []
 
         SendMessage ->
+            { model | channels = appendMessageToChannel model, currentMessage = Nothing } ! [ scrollMessages ]
+
+
+appendMessageToChannel : Model -> Dict ChannelName Channel
+appendMessageToChannel model =
+    let
+        activeChannel =
+            Models.Channel.active model
+
+        newMessages =
+            Models.Message.appendCurrent model.currentMessage activeChannel
+    in
+    case activeChannel of
+        Just channel ->
             let
-                activeChannel =
-                    Models.Channel.active model
-
-                newMessages =
-                    Models.Message.appendCurrent model.currentMessage activeChannel
-
-                newChannels =
-                    case activeChannel of
-                        Just channel ->
-                            let
-                                newChannel =
-                                    { channel | messages = Just newMessages }
-                            in
-                            Dict.insert model.activeChannel newChannel model.channels
-
-                        Nothing ->
-                            model.channels
-
-                scrollMessages =
-                    Task.attempt (\_ -> NoOp) (Dom.Scroll.toBottom "chat-messages")
+                newChannel =
+                    { channel | messages = Just newMessages }
             in
-            { model | channels = newChannels, currentMessage = Nothing } ! [ scrollMessages ]
+            Dict.insert model.activeChannel newChannel model.channels
+
+        Nothing ->
+            model.channels
+
+
+scrollMessages : Cmd Msg
+scrollMessages =
+    Task.attempt (\_ -> NoOp) (Dom.Scroll.toBottom "chat-messages")
