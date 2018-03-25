@@ -1,10 +1,11 @@
-module Models.Message exposing (active, appendCurrent, create)
+module Models.Message exposing (active, appendCurrent, new)
 
-import Types exposing (Channel, ChatMessage, MemberId, Model)
+import Dict exposing (Dict)
+import Types exposing (Channel, ChannelName, ChatMessage, Member, MemberId, Model)
 
 
-create : MemberId -> String -> ChatMessage
-create memberId message =
+new : MemberId -> String -> ChatMessage
+new memberId message =
     { memberId = memberId
     , message = message
     }
@@ -20,30 +21,25 @@ active activeChannel =
             []
 
 
-currentAsList : Maybe ChatMessage -> List ChatMessage
-currentAsList currentMessage =
-    case currentMessage of
-        Just chatMessage ->
-            [ chatMessage ]
+currentAsList : Dict ChannelName String -> Channel -> MemberId -> List ChatMessage
+currentAsList currentMessages activeChannel currentMemberId =
+    case Dict.get activeChannel.name currentMessages of
+        Just message ->
+            [ new currentMemberId message ]
 
         Nothing ->
             []
 
 
-appendCurrent : Maybe ChatMessage -> Maybe Channel -> List ChatMessage
-appendCurrent currentMessage activeChannel =
+appendCurrent : Dict ChannelName String -> Channel -> MemberId -> List ChatMessage
+appendCurrent currentMessages activeChannel currentMemberId =
     let
-        messages =
-            case activeChannel of
-                Just channel ->
-                    channel.messages
-
-                Nothing ->
-                    Nothing
+        current =
+            currentAsList currentMessages activeChannel currentMemberId
     in
-    case messages of
-        Just messages ->
-            messages ++ currentAsList currentMessage
+    case activeChannel.messages of
+        Just acMessages ->
+            acMessages ++ current
 
         Nothing ->
-            []
+            current

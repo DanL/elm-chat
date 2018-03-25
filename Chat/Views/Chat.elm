@@ -1,5 +1,6 @@
 module Views.Chat exposing (chat)
 
+import Dict exposing (Dict)
 import Helpers exposing (onEnter)
 import Html exposing (Attribute, Html, div, input, li, text, ul)
 import Html.Attributes exposing (..)
@@ -58,7 +59,7 @@ htmlMessage : ( ChatMessage, Member ) -> Html msg
 htmlMessage ( chatMessage, member ) =
     li []
         [ div
-            [ class "chat-messages-name" ]
+            [ class "chat-message-name" ]
             [ text member.name ]
         , div
             [ class "chat-message-message" ]
@@ -69,13 +70,11 @@ htmlMessage ( chatMessage, member ) =
 inputMessage : Model -> Html Msg
 inputMessage model =
     let
-        currentMessage =
-            case model.currentMessage of
-                Just cm ->
-                    cm.message
+        emptyMessage =
+            Models.Message.new model.currentMemberId ""
 
-                Nothing ->
-                    ""
+        currentMessage =
+            Maybe.withDefault "" (Dict.get model.activeChannel model.currentMessages)
     in
     div
         [ id "chat-input" ]

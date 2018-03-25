@@ -71,7 +71,7 @@ emptyModel =
     { channels = Dict.empty
     , members = Dict.empty
     , activeChannel = ""
-    , currentMessage = Nothing
+    , currentMessages = Dict.empty
     , currentMemberId = 0
     }
 
@@ -86,10 +86,18 @@ update msg model =
             { model | activeChannel = channel } ! []
 
         SetMessage message ->
-            { model | currentMessage = Just (Models.Message.create model.currentMemberId message) } ! []
+            let
+                newCurrentMessages =
+                    Dict.insert model.activeChannel message model.currentMessages
+            in
+            { model | currentMessages = newCurrentMessages } ! []
 
         SendMessage ->
-            { model | channels = appendMessageToChannel model, currentMessage = Nothing } ! [ scrollMessages ]
+            let
+                newCurrentMessages =
+                    Dict.insert model.activeChannel "" model.currentMessages
+            in
+            { model | channels = appendMessageToChannel model, currentMessages = newCurrentMessages } ! [ scrollMessages ]
 
 
 appendMessageToChannel : Model -> Dict ChannelName Channel
@@ -97,13 +105,13 @@ appendMessageToChannel model =
     let
         activeChannel =
             Models.Channel.active model
-
-        newMessages =
-            Models.Message.appendCurrent model.currentMessage activeChannel
     in
     case activeChannel of
         Just channel ->
             let
+                newMessages =
+                    Models.Message.appendCurrent model.currentMessages channel model.currentMemberId
+
                 newChannel =
                     { channel | messages = Just newMessages }
             in

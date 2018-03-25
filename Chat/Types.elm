@@ -14,7 +14,7 @@ type alias Model =
     { channels : Dict ChannelName Channel
     , members : Dict Int Member
     , activeChannel : ChannelName
-    , currentMessage : Maybe ChatMessage
+    , currentMessages : Dict ChannelName String
     , currentMemberId : MemberId
     }
 
