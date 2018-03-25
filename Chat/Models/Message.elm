@@ -1,20 +1,17 @@
 module Models.Message exposing (active, appendCurrent, create)
 
-import Models.Channel as Channel
-import Types exposing (ChatMessage, Model)
+import Types exposing (Channel, ChatMessage, MemberId, Model)
 
 
-create : String -> Model -> Maybe ChatMessage
-create message model =
-    Just (ChatMessage model.currentMember message)
+create : MemberId -> String -> ChatMessage
+create memberId message =
+    { memberId = memberId
+    , message = message
+    }
 
 
-active : Model -> List ChatMessage
-active model =
-    let
-        activeChannel =
-            Channel.active model
-    in
+active : Maybe Channel -> List ChatMessage
+active activeChannel =
     case activeChannel of
         Just channel ->
             channel.messages |> Maybe.withDefault []
@@ -23,9 +20,9 @@ active model =
             []
 
 
-currentAsList : Model -> List ChatMessage
-currentAsList model =
-    case model.currentMessage of
+currentAsList : Maybe ChatMessage -> List ChatMessage
+currentAsList currentMessage =
+    case currentMessage of
         Just chatMessage ->
             [ chatMessage ]
 
@@ -33,11 +30,11 @@ currentAsList model =
             []
 
 
-appendCurrent : Model -> List ChatMessage
-appendCurrent model =
+appendCurrent : Maybe ChatMessage -> Maybe Channel -> List ChatMessage
+appendCurrent currentMessage activeChannel =
     let
         messages =
-            case Channel.active model of
+            case activeChannel of
                 Just channel ->
                     channel.messages
 
@@ -46,7 +43,7 @@ appendCurrent model =
     in
     case messages of
         Just messages ->
-            messages ++ currentAsList model
+            messages ++ currentAsList currentMessage
 
         Nothing ->
             []

@@ -3,8 +3,9 @@ port module Chat exposing (..)
 import Dict exposing (Dict)
 import Html exposing (program)
 import Models.Channel
+import Models.Member
 import Models.Message
-import Types exposing (ChatMessage, Member, Model, Msg(..))
+import Types exposing (ChatMessage, Member, MemberId, Model, Msg(..))
 import Views exposing (view)
 
 
@@ -21,43 +22,44 @@ main =
 init : ( Model, Cmd Msg )
 init =
     let
+        emptyGeneralChannel =
+            Models.Channel.new "general"
+
+        generalMessages =
+            Just
+                [ { memberId = 1, message = "This is a test message." }
+                , { memberId = 2, message = "Messages are cool." }
+                , { memberId = 3, message = "Something something whatever." }
+                ]
+
+        generalChannel =
+            { emptyGeneralChannel | messages = generalMessages }
+
         channels =
-            [ ( "boston"
-              , { name = "boston"
-                , members = []
-                , messages = Just []
-                }
-              )
-            , ( "general"
-              , { name = "general"
-                , members = []
-                , messages =
-                    Just
-                        [ { member = { name = "dan" }, message = "This is a test message." }
-                        , { member = { name = "jake" }, message = "Messages are cool." }
-                        , { member = { name = "fyodor" }, message = "Something something whatever." }
-                        ]
-                }
-              )
-            , ( "engineering"
-              , { name = "engineering"
-                , members = []
-                , messages = Just []
-                }
-              )
+            [ ( "boston", Models.Channel.new "boston" )
+            , ( "general", generalChannel )
+            , ( "engineering", Models.Channel.new "engineering" )
             ]
                 |> Dict.fromList
 
         activeChannel =
             "general"
 
-        currentMember =
-            { name = "Dan" }
+        currentMemberId =
+            1
+
+        members =
+            [ ( 1, Models.Member.new 1 "Dan" )
+            , ( 2, Models.Member.new 2 "Jake" )
+            , ( 3, Models.Member.new 3 "Fyodor" )
+            ]
+                |> Dict.fromList
     in
     { emptyModel
         | channels = channels
+        , members = members
         , activeChannel = activeChannel
-        , currentMember = currentMember
+        , currentMemberId = currentMemberId
     }
         ! []
 
@@ -65,9 +67,10 @@ init =
 emptyModel : Model
 emptyModel =
     { channels = Dict.empty
+    , members = Dict.empty
     , activeChannel = ""
     , currentMessage = Nothing
-    , currentMember = { name = "" }
+    , currentMemberId = 0
     }
 
 
@@ -81,15 +84,15 @@ update msg model =
             { model | activeChannel = channel } ! []
 
         SetMessage message ->
-            { model | currentMessage = Models.Message.create message model } ! []
+            { model | currentMessage = Just (Models.Message.create model.currentMemberId message) } ! []
 
         SendMessage ->
             let
-                newMessages =
-                    Models.Message.appendCurrent model
-
                 activeChannel =
                     Models.Channel.active model
+
+                newMessages =
+                    Models.Message.appendCurrent model.currentMessage activeChannel
 
                 newChannels =
                     case activeChannel of

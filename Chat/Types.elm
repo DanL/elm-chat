@@ -12,9 +12,10 @@ type Msg
 
 type alias Model =
     { channels : Dict ChannelName Channel
+    , members : Dict Int Member
     , activeChannel : ChannelName
     , currentMessage : Maybe ChatMessage
-    , currentMember : Member
+    , currentMemberId : MemberId
     }
 
 
@@ -24,17 +25,22 @@ type alias ChannelName =
 
 type alias Channel =
     { name : ChannelName
-    , members : List Member
+    , memberIds : List MemberId
     , messages : Maybe (List ChatMessage)
     }
 
 
 type alias ChatMessage =
-    { member : Member
+    { memberId : MemberId
     , message : String
     }
 
 
+type alias MemberId =
+    Int
+
+
 type alias Member =
-    { name : String
+    { id : MemberId
+    , name : String
     }

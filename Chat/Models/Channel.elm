@@ -1,4 +1,4 @@
-module Models.Channel exposing (active, empty)
+module Models.Channel exposing (active, new)
 
 import Dict
 import Types exposing (Channel, ChannelName, Model)
@@ -9,6 +9,6 @@ active model =
     Dict.get model.activeChannel model.channels
 
 
-empty : Channel
-empty =
-    Channel "" [] Nothing
+new : ChannelName -> Channel
+new name =
+    Channel name [] (Just [])
