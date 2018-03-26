@@ -81,6 +81,7 @@ inputMessage model =
         [ input
             [ type_ "text"
             , placeholder "Say something~"
+            , id "chat-input-field"
             , value currentMessage
             , onInput SetMessage
             , onEnter SendMessage

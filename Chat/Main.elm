@@ -1,6 +1,7 @@
 port module Chat exposing (..)
 
 import Dict exposing (Dict)
+import Dom exposing (focus)
 import Dom.Scroll
 import Html exposing (program)
 import Models.Channel
@@ -83,7 +84,11 @@ update msg model =
             model ! []
 
         SwitchChannel channel ->
-            { model | activeChannel = channel } ! []
+            let
+                focusInput =
+                    Task.attempt (always NoOp) (focus "chat-input-field")
+            in
+            { model | activeChannel = channel } ! [ focusInput ]
 
         SetMessage message ->
             let
