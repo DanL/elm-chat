@@ -1,7 +1,8 @@
 module Views.Switcher exposing (switcher)
 
 import Dict exposing (Dict)
-import Html exposing (Attribute, Html, div, li, text, ul)
+import FontAwesome.Solid as Icon
+import Html exposing (Attribute, Html, div, i, li, span, text, ul)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Types exposing (Channel, ChannelName, Model, Msg(..))
@@ -19,18 +20,33 @@ channels model =
     let
         channelList =
             List.map
-                (channelNode model.activeChannel)
-                (Dict.values model.channels |> List.map .name)
+                (channelNode model.currentMessages model.activeChannel)
+                (Dict.keys model.channels)
     in
     ul
         [ id "channels" ]
         channelList
 
 
-channelNode : ChannelName -> ChannelName -> Html Msg
-channelNode activeChannel name =
+channelNode : Dict ChannelName String -> ChannelName -> ChannelName -> Html Msg
+channelNode currentMessages activeChannel name =
+    let
+        currentMessage =
+            Maybe.withDefault "" (Dict.get name currentMessages)
+
+        visible =
+            String.length currentMessage > 0 && name /= activeChannel
+
+        icon =
+            if visible then
+                Icon.pencil_alt
+            else
+                text ""
+    in
     li
         [ onClick <| SwitchChannel name
         , classList [ ( "channel-active", name == activeChannel ) ]
         ]
-        [ text ("#" ++ name) ]
+        [ span [] [ text ("#" ++ name) ]
+        , icon
+        ]
