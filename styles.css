@@ -8,7 +8,7 @@ body {
 
 #app {
   display: grid;
-  grid-template-columns: 20% 1fr;
+  grid-template-columns: auto 1fr auto;
 }
 
 #switcher {
@@ -19,6 +19,7 @@ body {
 #channels {
   padding: 0;
   margin: 10px 0 0 10px;
+  width: 200px;
 }
 
 #channels li {
@@ -98,7 +99,8 @@ body {
 
 #memberSidebar {
   display: none;
-  width: 20%;
+  width: 250px;
+  border-left: 1px solid #aaa;
 }
 
 .showMemberSidebar {
