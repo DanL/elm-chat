@@ -17,6 +17,7 @@ type alias Model =
     , activeChannel : ChannelName
     , currentMessages : Dict ChannelName String
     , currentMemberId : MemberId
+    , selectedMemberId : Maybe MemberId
     , viewVisibility : ViewVisibility
     }
 

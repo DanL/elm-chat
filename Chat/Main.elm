@@ -75,6 +75,7 @@ emptyModel =
     , activeChannel = ""
     , currentMessages = Dict.empty
     , currentMemberId = 0
+    , selectedMemberId = Nothing
     , viewVisibility = Models.ViewVisibility.empty
     }
 
@@ -108,13 +109,31 @@ update msg model =
 
         ToggleMemberSidebar memberId ->
             let
+                newMemberId =
+                    case model.selectedMemberId of
+                        Just id ->
+                            if id /= memberId then
+                                Just memberId
+                            else
+                                Nothing
+
+                        Nothing ->
+                            Just memberId
+
+                newVisibility =
+                    newMemberId /= Nothing
+
                 viewVisibility =
                     model.viewVisibility
 
                 newViewVisibility =
-                    { viewVisibility | memberSidebar = not viewVisibility.memberSidebar }
+                    { viewVisibility | memberSidebar = newVisibility }
             in
-            { model | viewVisibility = newViewVisibility } ! []
+            { model
+                | viewVisibility = newViewVisibility
+                , selectedMemberId = newMemberId
+            }
+                ! []
 
 
 appendMessageToChannel : Model -> Dict ChannelName Channel

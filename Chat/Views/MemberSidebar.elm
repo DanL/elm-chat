@@ -7,8 +7,17 @@ import Types exposing (Model, Msg(..))
 
 memberSidebar : Model -> Html Msg
 memberSidebar model =
+    let
+        memberId =
+            case model.selectedMemberId of
+                Just id ->
+                    toString id
+
+                Nothing ->
+                    "0"
+    in
     div
         [ id "memberSidebar"
         , classList [ ( "showMemberSidebar", model.viewVisibility.memberSidebar ) ]
         ]
-        [ text "Sidebar" ]
+        [ text ("Sidebar for " ++ memberId) ]
