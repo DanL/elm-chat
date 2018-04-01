@@ -8,6 +8,7 @@ type Msg
     | SwitchChannel ChannelName
     | SetMessage String
     | SendMessage
+    | ToggleMemberSidebar MemberId
 
 
 type alias Model =
@@ -16,7 +17,12 @@ type alias Model =
     , activeChannel : ChannelName
     , currentMessages : Dict ChannelName String
     , currentMemberId : MemberId
+    , viewVisibility : ViewVisibility
     }
+
+
+
+-- Chat
 
 
 type alias ChannelName =
@@ -36,6 +42,10 @@ type alias ChatMessage =
     }
 
 
+
+-- Member
+
+
 type alias MemberId =
     Int
 
@@ -43,4 +53,14 @@ type alias MemberId =
 type alias Member =
     { id : MemberId
     , name : String
+    , status : String
+    , bio : String
     }
+
+
+
+-- View
+
+
+type alias ViewVisibility =
+    { memberSidebar : Bool }

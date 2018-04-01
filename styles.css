@@ -80,6 +80,7 @@ body {
   font-weight: bold;
   margin-bottom: 1px;
   color: purple;
+  cursor: pointer;
 }
 
 #chat-input {
@@ -93,4 +94,14 @@ body {
   box-sizing: border-box;
   padding: 5px;
   font: inherit;
+}
+
+#memberSidebar {
+  display: none;
+  width: 20%;
+}
+
+.showMemberSidebar {
+  /* Needs !important to take priority over the id */
+  display: block !important;
 }

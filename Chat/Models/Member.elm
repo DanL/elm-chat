@@ -4,9 +4,13 @@ import Dict exposing (Dict)
 import Types exposing (Member, MemberId, Model)
 
 
-new : MemberId -> String -> Member
-new id name =
-    Member id name
+new : MemberId -> String -> String -> String -> Member
+new id name status bio =
+    { id = id
+    , name = name
+    , status = status
+    , bio = bio
+    }
 
 
 
@@ -15,7 +19,11 @@ new id name =
 
 missing : Member
 missing =
-    new 0 "Missing"
+    { id = 0
+    , name = "Missing"
+    , status = ""
+    , bio = ""
+    }
 
 
 getMemberById : Dict Int Member -> MemberId -> Maybe Member

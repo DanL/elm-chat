@@ -7,6 +7,7 @@ import Html exposing (program)
 import Models.Channel
 import Models.Member
 import Models.Message
+import Models.ViewVisibility
 import Task
 import Types exposing (Channel, ChannelName, ChatMessage, Member, MemberId, Model, Msg(..))
 import Views exposing (view)
@@ -52,9 +53,9 @@ init =
             1
 
         members =
-            [ ( 1, Models.Member.new 1 "Dan" )
-            , ( 2, Models.Member.new 2 "Jake" )
-            , ( 3, Models.Member.new 3 "Fyodor" )
+            [ ( 1, Models.Member.new 1 "Dan" "Away" "B-b-b-bio bio" )
+            , ( 2, Models.Member.new 2 "Jake" "On Vacation" "Biooooooo" )
+            , ( 3, Models.Member.new 3 "Fyodor" "Working" "Bio bio bio" )
             ]
                 |> Dict.fromList
     in
@@ -74,6 +75,7 @@ emptyModel =
     , activeChannel = ""
     , currentMessages = Dict.empty
     , currentMemberId = 0
+    , viewVisibility = Models.ViewVisibility.empty
     }
 
 
@@ -103,6 +105,16 @@ update msg model =
                     Dict.insert model.activeChannel "" model.currentMessages
             in
             { model | channels = appendMessageToChannel model, currentMessages = newCurrentMessages } ! [ scrollMessages ]
+
+        ToggleMemberSidebar memberId ->
+            let
+                viewVisibility =
+                    model.viewVisibility
+
+                newViewVisibility =
+                    { viewVisibility | memberSidebar = not viewVisibility.memberSidebar }
+            in
+            { model | viewVisibility = newViewVisibility } ! []
 
 
 appendMessageToChannel : Model -> Dict ChannelName Channel

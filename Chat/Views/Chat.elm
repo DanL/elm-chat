@@ -4,7 +4,7 @@ import Dict exposing (Dict)
 import Helpers exposing (onEnter)
 import Html exposing (Attribute, Html, div, input, li, text, ul)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onClick, onInput)
 import Models.Channel
 import Models.Member
 import Models.Message
@@ -33,7 +33,7 @@ chatMessages model =
     Models.Message.active (Models.Channel.active model)
 
 
-messages : Model -> Html msg
+messages : Model -> Html Msg
 messages model =
     let
         maybeMember chatMessage =
@@ -55,11 +55,11 @@ messages model =
         (List.map htmlMessage messageMemberTuples)
 
 
-htmlMessage : ( ChatMessage, Member ) -> Html msg
+htmlMessage : ( ChatMessage, Member ) -> Html Msg
 htmlMessage ( chatMessage, member ) =
     li []
         [ div
-            [ class "chat-message-name" ]
+            [ class "chat-message-name", onClick (ToggleMemberSidebar member.id) ]
             [ text member.name ]
         , div
             [ class "chat-message-message" ]

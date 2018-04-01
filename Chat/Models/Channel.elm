@@ -11,4 +11,7 @@ active model =
 
 new : ChannelName -> Channel
 new name =
-    Channel name [] (Just [])
+    { name = name
+    , memberIds = []
+    , messages = Just []
+    }
