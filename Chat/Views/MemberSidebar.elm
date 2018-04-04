@@ -10,19 +10,9 @@ memberSidebar : Model -> Html Msg
 memberSidebar model =
     let
         member =
-            case model.selectedMemberId of
-                Just id ->
-                    case Models.Member.getMemberById model.members id of
-                        Just member ->
-                            member
-
-                        -- This should never happen?
-                        Nothing ->
-                            Models.Member.missing
-
-                -- This should never happen?
-                Nothing ->
-                    Models.Member.missing
+            model.selectedMemberId
+                |> Maybe.andThen (Models.Member.getMemberById model.members)
+                |> Maybe.withDefault Models.Member.missing
     in
     div
         [ id "memberSidebar"
