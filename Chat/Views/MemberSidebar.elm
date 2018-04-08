@@ -18,4 +18,7 @@ memberSidebar model =
         [ id "memberSidebar"
         , classList [ ( "showMemberSidebar", model.viewVisibility.memberSidebar ) ]
         ]
-        [ text ("Sidebar for " ++ member.name) ]
+        [ div [ id "memberSidebar-header" ] [ text member.name ]
+        , div [ id "memberSidebar-status" ] [ text member.status ]
+        , div [ id "memberSidebar-bio" ] [ text member.bio ]
+        ]

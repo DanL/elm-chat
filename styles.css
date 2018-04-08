@@ -107,3 +107,20 @@ body {
   /* Needs !important to take priority over the id */
   display: block !important;
 }
+
+#memberSidebar-header {
+  font-size: 11pt;
+  padding: 5px 9px;
+}
+
+#memberSidebar-status {
+  background-color: #eee;
+  color: #555;
+  padding: 3px 7px;
+  font-size: 8pt;
+  font-style: italic;
+}
+
+#memberSidebar-bio {
+  padding: 7px;
+}
