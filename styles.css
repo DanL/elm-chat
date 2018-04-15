@@ -104,7 +104,7 @@ body {
 }
 
 .showMemberSidebar {
-  /* Needs !important to take priority over the id */
+  /* Needs !important to take priority over #memberSidebar */
   display: block !important;
 }
 
