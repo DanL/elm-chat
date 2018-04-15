@@ -3,19 +3,28 @@ port module Chat exposing (..)
 import Dict exposing (Dict)
 import Dom exposing (focus)
 import Dom.Scroll
-import Html exposing (program)
+import Html exposing (programWithFlags)
 import Models.Channel
-import Models.Member
 import Models.Message
 import Models.ViewVisibility
 import Task
-import Types exposing (Channel, ChannelName, ChatMessage, Member, MemberId, Model, Msg(..))
+import Types
+    exposing
+        ( Channel
+        , ChannelName
+        , ChatMessage
+        , Flags
+        , Member
+        , MemberId
+        , Model
+        , Msg(..)
+        )
 import Views exposing (view)
 
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    program
+    programWithFlags
         { init = init
         , view = view
         , update = update
@@ -23,47 +32,24 @@ main =
         }
 
 
-init : ( Model, Cmd Msg )
-init =
+init : Flags -> ( Model, Cmd Msg )
+init flags =
     let
-        emptyGeneralChannel =
-            Models.Channel.new "general"
-
-        generalMessages =
-            Just
-                [ { memberId = 1, message = "This is a test message." }
-                , { memberId = 2, message = "Messages are cool." }
-                , { memberId = 3, message = "Something something whatever." }
-                ]
-
-        generalChannel =
-            { emptyGeneralChannel | messages = generalMessages }
-
-        channels =
-            [ ( "boston", Models.Channel.new "boston" )
-            , ( "general", generalChannel )
-            , ( "engineering", Models.Channel.new "engineering" )
-            ]
+        members =
+            flags.members
+                |> List.map (\m -> ( m.id, m ))
                 |> Dict.fromList
 
-        activeChannel =
-            "general"
-
-        currentMemberId =
-            1
-
-        members =
-            [ ( 1, Models.Member.new 1 "Dan" "Away" "B-b-b-bio bio" )
-            , ( 2, Models.Member.new 2 "Jake" "On Vacation" "Biooooooo" )
-            , ( 3, Models.Member.new 3 "Fyodor" "Working" "Bio bio bio" )
-            ]
+        channels =
+            flags.channels
+                |> List.map (\c -> ( c.name, c ))
                 |> Dict.fromList
     in
     { emptyModel
-        | channels = channels
-        , members = members
-        , activeChannel = activeChannel
-        , currentMemberId = currentMemberId
+        | members = members
+        , channels = channels
+        , currentMemberId = flags.currentMemberId
+        , activeChannel = flags.activeChannel
     }
         ! []
 

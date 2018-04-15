@@ -22,6 +22,14 @@ type alias Model =
     }
 
 
+type alias Flags =
+    { members : List Member
+    , channels : List Channel
+    , currentMemberId : Int
+    , activeChannel : String
+    }
+
+
 
 -- Chat
 

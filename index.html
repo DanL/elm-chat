@@ -8,7 +8,32 @@
   </head>
   <body>
     <script type="text/javascript">
-      var app = Elm.Chat.fullscreen();
+      var app = Elm.Chat.fullscreen({
+        members: [
+          { id: 1, name: 'Dan', status: 'Away', bio: 'B-b-b-bio bio' },
+          { id: 2, name: 'Jake', status: 'On Vacation', bio: 'Biooooooo' },
+          { id: 3, name: 'Fyodor', status: 'Working', bio: 'Bio bio bio' }
+        ],
+        channels: [{
+          name: 'boston',
+          memberIds: [],
+          messages: []
+        }, {
+          name: 'general',
+          memberIds: [],
+          messages: [
+            { memberId: 1, message: "This is a test message." },
+            { memberId: 2, message: "Messages are cool." },
+            { memberId: 3, message: "Something something whatever." }
+          ]
+        }, {
+          name: 'engineering',
+          memberIds: [],
+          messages: []
+        }],
+        currentMemberId: 1,
+        activeChannel: 'general'
+      });
     </script>
   </body>
 </html>
